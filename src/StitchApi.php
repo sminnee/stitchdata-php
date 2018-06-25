@@ -1,5 +1,7 @@
 <?php
 
+namespace Sminnee\StitchData;
+
 use transit\JSONReader;
 use transit\JSONWriter;
 use transit\Transit;
@@ -7,12 +9,12 @@ use transit\Transit;
 class StitchApi
 {
     private $lastSequenceNumber = 0;
-    private $seqOffset = null;
 
-    private $seqBase = null;
-    private $seqOffset = null;
+    private $clientId = null;
 
-    public function __construct($clientId, $accessToken)
+    private $accessToken = null;
+
+    public function __construct(int $clientId, string $accessToken)
     {
         $this->clientId = $clientId;
         $this->accessToken = $accessToken;
@@ -48,7 +50,7 @@ class StitchApi
         foreach ($records as $record) {
             $commands[] = [
                 'action' => 'upsert',
-                'sequence' => $this->connector->getSequenceNumber(),
+                'sequence' => $this->getSequenceNumber(),
                 'table_name' => $tableName,
                 'key_names' => $keyNames,
                 'data' => $record,
@@ -61,7 +63,7 @@ class StitchApi
     /**
      * Run an API call
      */
-    public function apiCall($subUrl, $data, bool $includeClientID = true)
+    public function apiCall(string $subUrl, array $data, bool $includeClientID = true)
     {
         $s = curl_init();
         $headers = [];
@@ -73,14 +75,14 @@ class StitchApi
         curl_setopt($s, CURLOPT_HTTPHEADER, [
             'Content-Type: application/transit+json',
             //'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->params['access-token'],
+            'Authorization: Bearer ' . $this->accessToken,
         ]);
 
         curl_setopt($s, CURLOPT_STDERR, $f);
 
         if ($includeClientID) {
             foreach ($data as $i => $record) {
-                $data[$i]['client_id']  = (int)$this->params['client-id'];
+                $data[$i]['client_id']  = (int)$this->clientId;
             }
         }
 
@@ -113,7 +115,7 @@ class StitchApi
     public function getSequenceNumber()
     {
         $next = max($this->lastSequenceNumber + 1, time() * 1000);
-        this->lastSequenceNumber = $next;
+        $this->lastSequenceNumber = $next;
         return $next;
     }
 }
