@@ -3,10 +3,10 @@ PHP SDK for StitchData.com's [Import API](https://www.stitchdata.com/docs/integr
 
 ## Installation
 
-This is a [Composer](https://getcomposer.org/) library, and can be installed with `composer require`. As it doesn't currently have a stable tag, you will have to install the dev-master version.
+This is a [Composer](https://getcomposer.org/) library, and can be installed with `composer require`. The current release is `^0.1`
 
 ```
-composer require sminnee/stitchdata-php:dev-master
+composer require sminnee/stitchdata-php:^0.1
 ```
 
 ## Usage
