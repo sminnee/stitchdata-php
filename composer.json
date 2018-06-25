@@ -1,0 +1,20 @@
+{
+    "name": "sminnee/stitchdata-php",
+    "description": "PHP SDK for StitchData.com's Import API",
+    "type": "library",
+    "require": {
+        "honzabrecka/transit-php": "^0.8.3"
+    },
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Sam Minnee",
+            "email": "sam@silverstripe.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sminnee\\StitchData\\": "src/"
+        }
+    }
+}
