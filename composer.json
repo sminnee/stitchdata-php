@@ -3,7 +3,8 @@
     "description": "PHP SDK for StitchData.com's Import API",
     "type": "library",
     "require": {
-        "honzabrecka/transit-php": "^0.8.3"
+        "honzabrecka/transit-php": "^0.8.3",
+        "php": ">=5.6"
     },
     "license": "BSD-3-Clause",
     "authors": [

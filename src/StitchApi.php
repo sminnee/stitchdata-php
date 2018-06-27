@@ -14,7 +14,7 @@ class StitchApi
 
     private $accessToken = null;
 
-    public function __construct(int $clientId, string $accessToken)
+    public function __construct($clientId, $accessToken)
     {
         $this->clientId = $clientId;
         $this->accessToken = $accessToken;
@@ -24,7 +24,7 @@ class StitchApi
      * Validates that the connection is working and that your credentials are correct.
      * @throws LogicException if there's an issue
      */
-    public function validate(array $data = null, bool $includeClientId = true)
+    public function validate(array $data = null, $includeClientId = true)
     {
         if ($data === null) {
             $data = [[
@@ -43,7 +43,7 @@ class StitchApi
     /**
      * Pushes a number of records to the API in a single batch request.
      */
-    public function pushRecords(string $tableName, array $keyNames, array $records)
+    public function pushRecords($tableName, array $keyNames, array $records)
     {
 
         $commands = [];
@@ -63,7 +63,7 @@ class StitchApi
     /**
      * Run an API call
      */
-    public function apiCall(string $subUrl, array $data, bool $includeClientID = true)
+    public function apiCall($subUrl, array $data, $includeClientID = true)
     {
         $s = curl_init();
         $headers = [];
