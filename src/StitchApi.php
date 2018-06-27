@@ -22,6 +22,7 @@ class StitchApi
 
     /**
      * Validates that the connection is working and that your credentials are correct.
+     *
      * @throws LogicException if there's an issue
      */
     public function validate(array $data = null, $includeClientId = true)
@@ -41,9 +42,16 @@ class StitchApi
 
 
     /**
-     * Pushes a number of records to the API in a single batch request.
+     * Pushes a number of records to the API in 1 or more API calls.
+     *
+     * @param string $tableName The name of the table to upsert to
+     * @param array $keyNames The names of the keys to update
+     * @param array $records An array-of-maps representing the data to upsert
+     * @param int $batchSize The max number of records to send in a single API call. Null/0 for no limit
+     * @return The result of the final apiCall request.
+     * @throws LogicException if there's a failed API call
      */
-    public function pushRecords($tableName, array $keyNames, array $records)
+    public function pushRecords($tableName, array $keyNames, array $records, $batchSize = 100)
     {
 
         $commands = [];
@@ -55,6 +63,11 @@ class StitchApi
                 'key_names' => $keyNames,
                 'data' => $record,
             ];
+
+            if ($batchSize && sizeof($commands) >= $batchSize) {
+                $this->apiCall('import/push', $commands, true);
+                $commands = [];
+            }
         }
 
         return $this->apiCall('import/push', $commands, true);

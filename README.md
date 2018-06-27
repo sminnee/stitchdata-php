@@ -34,13 +34,14 @@ Validates that the connection is working and that your credentials are correct.
 $api->validate();
 ```
 
-### StitchApi::pushRecords(string $tableName, array $keyNames, array $records)
+### StitchApi::pushRecords(string $tableName, array $keyNames, array $records, int $batchSize = 100)
 
-Pushes a number of records to the API in a single batch request.
+Pushes a number of records to the API in 1 or more batches.
 
  * `$tableName` is the name of the table in your data warehouse that you wnat StitchData to create and/or write to. It will populate `table_name` in requests to the API.
  * `$keyNames` is an array of record keys that you want to collectively use are your primary key. It will populate `key_names` in requests to the API.
- * `$keyNames` is an array of record keys that you want to collectively use are your primary key. It will populate `key_names` in requests to the API.
+ * `$records` is an array of records, where each record is a map. This is the data to upsert.
+ * `$batchSize`, which defaults to 100, is the maximum number of records ot include in a single API request.
 
 The Data types you can use are determined by the [Transit library's default type mapping](https://github.com/honzabrecka/transit-php#default-type-mapping). Notably, you should use `Datetime` objects to represents dates/times.
 
@@ -81,7 +82,3 @@ Sequence IDs are an important part of interacting with the API. `pushRecords()` 
  * Subquent requests will use the greater of sequence ID + 1 or time() * 1000.
 
 If you wish to manually generate your own sequnce IDs you have to use the apiCall method instead, but please raise a github issue describing your use-case!
-
-## To do
-
- * Automatic batching of queries
