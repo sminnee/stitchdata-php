@@ -11,7 +11,7 @@ composer require sminnee/stitchdata-php:^0.1
 
 ## Usage
 
-### new StitchApi(string $clinetId, string $accessToekn)
+### new StitchApi(string $clientId, string $accessToken)
 
 The `Sminnee\StitchData\StitchApi` class provides access to the API. Its constructor takes 2 arguments, which are described in the [Import API documentation](https://www.stitchdata.com/docs/integrations/import-api#auth).
 
