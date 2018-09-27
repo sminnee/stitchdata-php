@@ -65,12 +65,16 @@ class StitchApi
             ];
 
             if ($batchSize && sizeof($commands) >= $batchSize) {
-                $this->apiCall('import/push', $commands, true);
+                $result = $this->apiCall('import/push', $commands, true);
                 $commands = [];
             }
         }
 
-        return $this->apiCall('import/push', $commands, true);
+        if ($commands) {
+            $result = $this->apiCall('import/push', $commands, true);
+        }
+
+        return $result;
     }
 
     /**
@@ -99,6 +103,7 @@ class StitchApi
             }
         }
 
+        $payload = null;
         if ($data) {
             if (!is_array($data)) {
                 throw new \LogicException("bad data: " . var_export($data, true));
