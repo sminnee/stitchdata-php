@@ -119,7 +119,7 @@ class StitchApi
 
         curl_close($s);
 
-        if ($status != 200 && $status != 201) {
+        if ($status != 200 && $status != 201 && $status != 202) {
             throw new \LogicException("StitchData API $subUrl returned HTTP $status: $content\n----\n" . $payload);
         }
 
