@@ -48,11 +48,24 @@ class StitchApi
      * @param array $keyNames The names of the keys to update
      * @param array $records An array-of-maps representing the data to upsert
      * @param int $batchSize The max number of records to send in a single API call. Null/0 for no limit
+     * @param callable(array): void $onBatchSent Call this after a batch is successfully sent, passing the batch data as an argument
      * @return The result of the final apiCall request.
      * @throws LogicException if there's a failed API call
      */
-    public function pushRecords($tableName, array $keyNames, array $records, $batchSize = 100)
+    public function pushRecords(string $tableName, array $keyNames, iterable $records, $batchSize = 100, ?callable $onBatchSent = null)
     {
+        $pushCommands = function ($commands) use ($onBatchSent) {
+            $result = $this->apiCall('import/push', $commands, true);
+            if ($onBatchSent !== null) {
+                $onBatchSent(array_map(
+                    function ($command) {
+                        return $command['data'];
+                    },
+                    $commands
+                ));
+            }
+            return $result;
+        };
 
         $commands = [];
         foreach ($records as $record) {
@@ -65,13 +78,13 @@ class StitchApi
             ];
 
             if ($batchSize && sizeof($commands) >= $batchSize) {
-                $result = $this->apiCall('import/push', $commands, true);
+                $result = $pushCommands($commands);
                 $commands = [];
             }
         }
 
         if ($commands) {
-            $result = $this->apiCall('import/push', $commands, true);
+            $result = $pushCommands($commands);
         }
 
         return $result;
