@@ -68,6 +68,8 @@ class StitchApi
         };
 
         $commands = [];
+        $result = null;
+
         foreach ($records as $record) {
             $commands[] = [
                 'action' => 'upsert',
